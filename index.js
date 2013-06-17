@@ -30,6 +30,7 @@ module.exports = function(base, opts){
 		})
 
 	return function(req, res, next){
+		if (req.method != 'GET') return next()
 		var url = req.url.split('?')[0]
 		var path = join(base, url)
 		var stat
