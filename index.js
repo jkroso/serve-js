@@ -7,6 +7,7 @@ var detective = require('detective')
   , dirname = path.dirname
   , join = path.join
   , fs = require('fs')
+  , exists = fs.existsSync
 
 module.exports = function(base, opts){
 	var graph = new Graph()
@@ -33,15 +34,10 @@ module.exports = function(base, opts){
 		if (req.method != 'GET') return next()
 		var url = req.url.split('?')[0]
 		var path = join(base, url)
-		var stat
-		try {
-			stat = fs.statSync(path)
-		} catch (e) {
-			return next(e)
-		}
+		var type = extension(path)
 
 		// javascript file
-		if (/\.js$/.test(path) && stat.isFile()) {
+		if (type == 'js' && exists(path)) {
 			return graph.clear()
 				.add(path)
 				.then(values)
@@ -56,14 +52,8 @@ module.exports = function(base, opts){
 				})
 		}
 
-		var index = join(path, 'index.html')
-		if (stat.isDirectory() && fs.existsSync(index)) {
-			path = index
-			stat = fs.statSync(path)
-		}
-
 		// handle embeded js
-		if (/\.html$/.test(path) && stat.isFile()) {
+		if (type == 'html' && exists(path)) {
 			var html = fs.readFileSync(path)
 			var $ = cheerio.load(html)
 			var scripts = $('script')
@@ -77,7 +67,6 @@ module.exports = function(base, opts){
 				}
 				var file = graph.graph[path] = {
 					path: path + '.js',
-					'last-modified': stat.mtime,
 					text: script,
 					parents: [],
 					children: [],
@@ -129,4 +118,8 @@ function unique(arr) {
   }
 
   return result
+}
+
+function extension(file){
+	return path.extname(file).slice(1)
 }
