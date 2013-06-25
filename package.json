@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": [
     "development",
@@ -12,14 +12,14 @@
     "url": "git://github.com/jkroso/serve-js.git"
   },
   "dependencies": {
-    "bigfile": "~0.5.3",
-    "cheerio": "~0.12.0",
-    "sourcegraph": "~0.8.1",
-    "detective": "~2.1.2"
+    "bigfile": "0.5.4",
+    "cheerio": "0.12.0",
+    "sourcegraph": "0.8.2",
+    "detective": "2.1.2"
   },
   "devDependencies": {
     "serve": "http://github.com/jkroso/serve/tarball/feature/middleware",
-    "chai": "~1.6.1",
-    "mocha": "~1.11.0"
+    "chai": "1.7.1",
+    "mocha": "1.11.0"
   }
 }
