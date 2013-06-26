@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": [
     "development",
@@ -14,7 +14,7 @@
   "dependencies": {
     "bigfile": "0.5.4",
     "cheerio": "0.12.0",
-    "sourcegraph": "0.8.2",
+    "sourcegraph": "0.8.3",
     "detective": "2.1.2"
   },
   "devDependencies": {

@@ -41,7 +41,7 @@ module.exports = function(base, opts){
 			return graph.clear()
 				.add(path)
 				.then(values)
-				.read(function(files){
+				.then(function(files){
 					build.end = function(code){
 						res.setHeader('Content-Type', 'application/javascript')
 						res.setHeader('Content-Length', Buffer.byteLength(code, 'utf8'))
@@ -49,7 +49,7 @@ module.exports = function(base, opts){
 					}
 					build.entry = path
 					build.send(files)
-				})
+				}).read(null, next)
 		}
 
 		// handle embeded js
@@ -84,7 +84,7 @@ module.exports = function(base, opts){
 						res.end(html)
 					}
 					build.send(values(graph.graph))
-				})
+				}).read(null, next)
 			}
 		}
 		
