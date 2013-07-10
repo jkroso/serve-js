@@ -65,6 +65,11 @@ module.exports = function(base, opts){
 				if ((/\n([ \t]+)[^\s]/).test(script)) {
 					script = script.replace(new RegExp('^' + RegExp.$1, 'mg'), '')
 				}
+				try { var requires = detective(script) }
+				catch (e) {
+					e.message += ' in the <script> of ' + path
+					return next(e)
+				}
 				var file = graph.graph[path] = {
 					path: path + '.js',
 					text: script,
@@ -72,7 +77,7 @@ module.exports = function(base, opts){
 					children: [],
 					aliases: [ path ],
 					base: dirname(path),
-					requires: detective(script)
+					requires: requires
 				}
 				return graph.trace(file).then(function(){
 					build.entry = path
