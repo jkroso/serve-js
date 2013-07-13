@@ -22,5 +22,8 @@
     "serve": "http://github.com/jkroso/serve/tarball/feature/middleware",
     "chai": "1.7.2",
     "mocha": "1.12.0"
+  },
+  "scripts": {
+    "install": "npm dedupe"
   }
 }
