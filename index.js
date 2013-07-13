@@ -1,5 +1,6 @@
 
 var detective = require('detective')
+  , each = require('foreach/series')
   , Graph = require('sourcegraph')
   , Compiler = require('bigfile')
   , cheerio = require('cheerio')
@@ -7,6 +8,7 @@ var detective = require('detective')
   , dirname = path.dirname
   , join = path.join
   , fs = require('fs')
+  , filter = Array.prototype.filter
   , exists = fs.existsSync
 
 module.exports = function(base, opts){
@@ -54,25 +56,26 @@ module.exports = function(base, opts){
 
 		// handle embeded js
 		if (type == 'html' && exists(path)) {
-			var html = fs.readFileSync(path)
-			var $ = cheerio.load(html)
-			var scripts = $('script')
-			var script = scripts[0]
-			if (scripts.length == 1 && typeof script.attribs.src != 'string') {
+			var $ = cheerio.load(fs.readFileSync(path, 'utf8'))
+			var scripts = filter.call($('script'), function(script){
+				return !script.attribs || typeof script.attribs.src != 'string'
+			})
+			if (scripts.length) return each(scripts, function(script, i){
 				graph.clear()
-				script = script.children[0].data
+				var src = script.children[0].data
 				// remove indentation
-				if ((/\n([ \t]+)[^\s]/).test(script)) {
-					script = script.replace(new RegExp('^' + RegExp.$1, 'mg'), '')
+				if ((/\n([ \t]+)[^\s]/).test(src)) {
+					src = src.replace(new RegExp('^' + RegExp.$1, 'mg'), '')
 				}
-				try { var requires = detective(script) }
+				var requires
+				try { requires = detective(src) }
 				catch (e) {
 					e.message += ' in the <script> of ' + path
-					return next(e)
+					throw e
 				}
 				var file = graph.graph[path] = {
-					path: path + '.js',
-					text: script,
+					path: path + '-' + (i + 1) + '.js',
+					text: src,
 					parents: [],
 					children: [],
 					aliases: [ path ],
@@ -82,15 +85,15 @@ module.exports = function(base, opts){
 				return graph.trace(file).then(function(){
 					build.entry = path
 					build.end = function send(code){
-						scripts[0].children[0].data = code
+						script.children[0].data = code
 						var html = $.html()
 						res.setHeader('Content-Type', 'text/html; charset=utf-8')
 						res.setHeader('Content-Length', Buffer.byteLength(html, 'utf8'))
 						res.end(html)
 					}
 					build.send(values(graph.graph))
-				}).read(null, next)
-			}
+				})
+			}).read(null, next)
 		}
 		
 		next()

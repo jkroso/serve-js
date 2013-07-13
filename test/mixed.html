@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+	<title>serve-js tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+	<script src="http://documentcloud.github.io/underscore/underscore-min.js"></script>
+	<script src="http://backbonejs.org/backbone-min.js"></script>
+</head>
+<body>
+	<div id="mocha"></div>
+	<script>
+		var mocha = require('mocha')
+
+		mocha.setup('bdd')
+
+		require('./serve-js.test')
+
+		var user = new Backbone.Model({
+			name: 'Matt',
+			age: 24
+		})
+
+		it('should work fine', function(){
+			if (!(user instanceof Backbone.Model)) throw new Error
+		})
+
+		mocha.run(function(){
+			console.log('Done!')
+		})
+	</script>
+</body>
+</html>
