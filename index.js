@@ -61,8 +61,8 @@ module.exports = function(base, opts){
 				return !script.attribs || typeof script.attribs.src != 'string'
 			})
 			if (scripts.length) return each(scripts, function(script, i){
-				graph.clear()
-				var src = script.children[0].data
+				if (!script.children.length) return
+				var src = script.children[0].data || ''
 				// remove indentation
 				if ((/\n([ \t]+)[^\s]/).test(src)) {
 					src = src.replace(new RegExp('^' + RegExp.$1, 'mg'), '')
@@ -73,6 +73,7 @@ module.exports = function(base, opts){
 					e.message += ' in the <script> of ' + path
 					throw e
 				}
+				graph.clear()
 				var file = graph.graph[path] = {
 					path: path + '-' + (i + 1) + '.js',
 					text: src,
