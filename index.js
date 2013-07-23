@@ -28,9 +28,6 @@ module.exports = function(base, opts){
 		.use('quick-path-shorten')
 		.use('development')
 		.use('umd')
-		.use(function(code){
-			this.end(code)
-		})
 
 	return function(req, res, next){
 		if (req.method != 'GET') return next()
@@ -44,13 +41,12 @@ module.exports = function(base, opts){
 				.add(path)
 				.then(values)
 				.then(function(files){
-					build.end = function(code){
+					build.entry = path
+					return build.send(files).then(function(code){
 						res.setHeader('Content-Type', 'application/javascript')
 						res.setHeader('Content-Length', Buffer.byteLength(code, 'utf8'))
 						res.end(code)
-					}
-					build.entry = path
-					build.send(files)
+					})
 				}).read(null, next)
 		}
 
@@ -58,7 +54,7 @@ module.exports = function(base, opts){
 		if (type == 'html' && exists(path)) {
 			var $ = cheerio.load(fs.readFileSync(path, 'utf8'))
 			var scripts = filter.call($('script'), function(script){
-				return !script.attribs || typeof script.attribs.src != 'string'
+				return typeof script.attribs.src != 'string'
 			})
 			if (scripts.length) return each(scripts, function(script, i){
 				if (!script.children.length) return
@@ -74,8 +70,9 @@ module.exports = function(base, opts){
 					throw e
 				}
 				graph.clear()
+				var entry = path + '-' + (i + 1) + '.js'
 				var file = graph.graph[path] = {
-					path: path + '-' + (i + 1) + '.js',
+					path: entry,
 					text: src,
 					parents: [],
 					children: [],
@@ -84,16 +81,17 @@ module.exports = function(base, opts){
 					requires: requires
 				}
 				return graph.trace(file).then(function(){
-					build.entry = path
-					build.end = function send(code){
+					build.entry = entry
+					return build.send(values(graph.graph)).then(function(code){
+						// console.log(code)
 						script.children[0].data = code
-						var html = $.html()
-						res.setHeader('Content-Type', 'text/html; charset=utf-8')
-						res.setHeader('Content-Length', Buffer.byteLength(html, 'utf8'))
-						res.end(html)
-					}
-					build.send(values(graph.graph))
+					})
 				})
+			}).then(function(){
+				var html = $.html()
+				res.setHeader('Content-Type', 'text/html; charset=utf-8')
+				res.setHeader('Content-Length', Buffer.byteLength(html, 'utf8'))
+				res.end(html)
 			}).read(null, next)
 		}
 		
@@ -103,30 +101,10 @@ module.exports = function(base, opts){
 
 function values(obj){
 	var vals = []
-	for (var k in obj) vals.push(obj[k])
-	return unique(vals)
-}
-
-function unique(arr) {
-  var len = arr.length
-  if (!len) return []
-
-  var result = [arr[0]]
-  var rc = 1
-  var i = 1
-
-  each: while (i < len) {
-    var el = arr[i++]
-    var c = 0
-
-    while (c < rc) {
-      if (result[c++] === el) continue each
-    }
-
-    result[rc++] = el
-  }
-
-  return result
+	for (var k in obj) {
+		if (vals.indexOf(obj[k]) < 0) vals.push(obj[k])
+	}
+	return vals
 }
 
 function extension(file){

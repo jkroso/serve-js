@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": [
     "development",
@@ -12,10 +12,10 @@
     "url": "git://github.com/jkroso/serve-js.git"
   },
   "dependencies": {
-    "bigfile": "0.5.4",
+    "bigfile": "0.6.0",
     "cheerio": "0.12.0",
-    "sourcegraph": "0.8.3",
     "detective": "2.1.2",
+    "sourcegraph": "0.8.3",
     "foreach": "http://github.com/jkroso/forEach/tarball/0.8.5"
   },
   "devDependencies": {
