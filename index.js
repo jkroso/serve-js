@@ -12,7 +12,7 @@ var detective = require('detective')
   , exists = fs.existsSync
 
 module.exports = function(base, opts){
-	var graph = new Graph()
+	var globalGraph = new Graph()
 		.use('nodeish')
 		.use('stylus')
 		.use('mocha')
@@ -34,6 +34,7 @@ module.exports = function(base, opts){
 		var url = req.url.split('?')[0]
 		var path = join(base, url)
 		var type = extension(path)
+		var graph = Object.create(globalGraph)
 
 		// javascript file
 		if (type == 'js' && exists(path)) {
