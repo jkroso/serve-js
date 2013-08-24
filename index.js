@@ -8,7 +8,7 @@ var detective = require('detective')
   , dirname = path.dirname
   , join = path.join
   , fs = require('fs')
-  , filter = Array.prototype.filter
+  , filter = Function.call.bind([].filter)
   , exists = fs.existsSync
 
 module.exports = function(base, opts){
@@ -27,7 +27,7 @@ module.exports = function(base, opts){
 		.use('transform')
 		.use('quick-path-shorten')
 		.use('development')
-		.use('umd')
+		.use('invoke')
 
 	return function(req, res, next){
 		if (req.method != 'GET') return next()
@@ -38,28 +38,37 @@ module.exports = function(base, opts){
 
 		// javascript file
 		if (type == 'js' && exists(path)) {
-			return graph.clear()
-				.add(path)
-				.then(values)
-				.then(function(files){
-					build.entry = path
-					return build.send(files).then(function(code){
-						res.setHeader('Content-Type', 'application/javascript')
-						res.setHeader('Content-Length', Buffer.byteLength(code, 'utf8'))
-						res.end(code)
-					})
-				}).read(null, next)
+			return graph.clear().add(path).then(function(graph){
+				// need to alias the entry so both the compiled and
+				// original can show up in the web inspector
+				build.entry = path.replace(/js$/, 'original.js')
+				var entry = graph[path]
+				entry.aliases.push(path)
+				entry.path = build.entry
+
+				return build.send(values(graph)).then(function(code){
+					res.setHeader('Content-Type', 'application/javascript')
+					res.setHeader('Content-Length', Buffer.byteLength(code, 'utf8'))
+					res.end(code)
+				})
+			}).read(null, next)
 		}
 
 		// handle embeded js
 		if (type == 'html' && exists(path)) {
-			var $ = cheerio.load(fs.readFileSync(path, 'utf8'))
-			var scripts = filter.call($('script'), function(script){
+			var html = fs.readFileSync(path, 'utf8')
+			var $ = cheerio.load(html)
+			var scripts = filter($('script'), function(script){
 				return typeof script.attribs.src != 'string'
 			})
-			if (scripts.length) return each(scripts, function(script, i){
+			if (!scripts.length) return next()
+
+			return each(scripts, function(script, i){
 				if (!script.children.length) return
 				var src = script.children[0].data || ''
+				var offset = html
+					.slice(0, html.indexOf('<script>' + src + '<\/script>'))
+					.split(/\n/).length - 1
 				// remove indentation
 				if ((/\n([ \t]+)[^\s]/).test(src)) {
 					src = src.replace(new RegExp('^' + RegExp.$1, 'mg'), '')
@@ -83,13 +92,14 @@ module.exports = function(base, opts){
 				}
 				return graph.trace(file).then(function(){
 					build.entry = entry
+					build.offsetScript = offset
 					return build.send(values(graph.graph)).then(function(code){
-						// console.log(code)
+						build.offsetScript = 0
 						script.children[0].data = code
+						html = $.html()
 					})
 				})
 			}).then(function(){
-				var html = $.html()
 				res.setHeader('Content-Type', 'text/html; charset=utf-8')
 				res.setHeader('Content-Length', Buffer.byteLength(html, 'utf8'))
 				res.end(html)
