@@ -1,15 +1,15 @@
 
+var filter = Function.call.bind([].filter)
 var detective = require('detective')
-  , each = require('foreach/series')
-  , Graph = require('sourcegraph')
-  , Compiler = require('bigfile')
-  , cheerio = require('cheerio')
-  , path = require('path')
-  , dirname = path.dirname
-  , join = path.join
-  , fs = require('fs')
-  , filter = Function.call.bind([].filter)
-  , exists = fs.existsSync
+var each = require('foreach/series')
+var Graph = require('sourcegraph')
+var Compiler = require('bigfile')
+var cheerio = require('cheerio')
+var path = require('path')
+var dirname = path.dirname
+var join = path.join
+var fs = require('fs')
+var exists = fs.existsSync
 
 module.exports = function(base, opts){
 	var globalGraph = new Graph()
@@ -25,7 +25,6 @@ module.exports = function(base, opts){
 		.plugin('jade')
 		.plugin('css')
 		.use('transform')
-		.use('quick-path-shorten')
 		.use('development')
 		.use('invoke')
 
