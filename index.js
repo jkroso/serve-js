@@ -66,7 +66,7 @@ module.exports = function(base, opts){
 				if (!script.children.length) return
 				var src = script.children[0].data || ''
 				var offset = html
-					.slice(0, html.indexOf('<script>' + src + '<\/script>'))
+					.slice(0, html.indexOf(src))
 					.split(/\n/).length - 1
 				// remove indentation
 				if ((/\n([ \t]+)[^\s]/).test(src)) {
