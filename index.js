@@ -23,6 +23,7 @@ module.exports = function(base, opts){
 		.plugin('nodeish')
 		.plugin('stylus')
 		.plugin('jade')
+		.plugin('html')
 		.plugin('css')
 		.use('transform')
 		.use('development')
