@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": ["development", "server"],
   "author": "Jake Rosoman",
@@ -11,11 +11,11 @@
     "result-type": "1.0.0",
     "detective": "2.2.0",
     "cheerio": "0.13.1",
-    "bigfile": "0.7.2"
+    "bigfile": "0.7.3"
   },
   "devDependencies": {
-    "serve": "http://github.com/jkroso/serve/tarball/feature/middleware",
-    "chai": "1.8.1",
-    "mocha": "1.17.0"
+    "serve": "jkroso/serve#feature/middleware",
+    "mocha": "1.17.0",
+    "chai": "1.8.1"
   }
 }
