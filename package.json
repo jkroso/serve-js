@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": ["development", "server"],
   "author": "Jake Rosoman",
@@ -11,7 +11,7 @@
     "result-type": "1.0.0",
     "detective": "2.2.0",
     "cheerio": "0.13.1",
-    "bigfile": "0.7.3"
+    "bigfile": "0.7.4"
   },
   "devDependencies": {
     "serve": "jkroso/serve#feature/middleware",
