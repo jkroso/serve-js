@@ -1,9 +1,13 @@
-var mocha = require('mocha')
 
-mocha.setup('bdd')
+var hydro = new(require('hydro'))
+
+hydro.set({
+  formatter: require('hydro-html'),
+  plugins: [ require('hydro-bdd') ]
+})
+
+hydro.setup()
 
 require('./serve-js.test')
 
-mocha.run(function(){
-	console.log('Done!')
-})
+hydro.run()

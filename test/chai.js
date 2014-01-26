@@ -1,8 +1,8 @@
 
 var chai = require('chai')
 
-global.should = chai.should()
-global.expect = chai.expect
+window.should = chai.should()
+window.expect = chai.expect
 // chai.use(require('chai-spies'))
 
 chai.Assertion.includeStack = true

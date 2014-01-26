@@ -1,16 +1,20 @@
-<title>serve-js tests</title>
-<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
 
-<div id="mocha"></div>
+<title>serve-js tests</title>
+<link rel="stylesheet" href="../node_modules/hydro-html/index.css">
+
+<div id="hydro"></div>
 
 <script type='text/javascript'>
-	var mocha = require('mocha')
+  var hydro = new(require('hydro'))
 
-	mocha.setup('bdd')
+  hydro.set({
+    formatter: require('hydro-html'),
+    plugins: [ require('hydro-bdd') ]
+  })
 
-	require('./serve-js.test')
+  hydro.setup()
 
-	mocha.run(function(){
-		console.log('Done!')
-	})
+  require('./serve-js.test')
+
+  hydro.run()
 </script>

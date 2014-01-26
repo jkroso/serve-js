@@ -1,37 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-	<title>serve-js tests</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+  <title>serve-js tests</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../node_modules/hydro-html/index.css">
 </head>
 <body>
-	<div id="mocha"></div>
-	<script>
-		var mocha = require('mocha')
-	</script>
-	<script src="http://documentcloud.github.io/underscore/underscore-min.js"></script>
-	<script src="http://backbonejs.org/backbone-min.js"></script>
-	<script>
-		var mocha = require('mocha')
+  <div id="hydro"></div>
+  <script>
+    var hydro = require('hydro')
+  </script>
+  <script src="http://documentcloud.github.io/underscore/underscore-min.js"></script>
+  <script src="http://backbonejs.org/backbone-min.js"></script>
+  <script>
+    var hydro = new(require('hydro'))
 
-		mocha.setup('bdd')
+    hydro.set({
+      formatter: require('hydro-html'),
+      plugins: [ require('hydro-bdd') ]
+    })
 
-		require('./serve-js.test')
+    hydro.setup()
 
-		var user = new Backbone.Model({
-			name: 'Matt',
-			age: 24
-		})
+    require('./serve-js.test')
 
-		it('should work fine', function(){
-			if (!(user instanceof Backbone.Model)) throw new Error
-		})
+    var user = new Backbone.Model({
+      name: 'Matt',
+      age: 24
+    })
 
-		mocha.run(function(){
-			console.log('Done!')
-		})
-	</script>
+    describe('it', function(){
+      it('should work fine', function(){
+        if (!(user instanceof Backbone.Model)) throw new Error
+      })
+    })
+
+    hydro.run()
+  </script>
 </body>
 </html>
