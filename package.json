@@ -1,17 +1,17 @@
 {
   "name": "serve-js",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": ["development", "server"],
   "author": "Jake Rosoman",
   "repository": "git://github.com/jkroso/serve-js.git",
   "dependencies": {
     "foreach": "jkroso/forEach#0.8.10",
-    "sourcegraph": "~0.9.4",
-    "result-type": "1.0.0",
-    "cheerio": "~0.13.1",
-    "bigfile": "~0.8.0",
-    "result": "~1.0.0"
+    "result-type": "1",
+    "sourcegraph": "0",
+    "cheerio": "0",
+    "bigfile": "0",
+    "result": "1"
   },
   "devDependencies": {
     "serve": "jkroso/serve#feature/middleware",
