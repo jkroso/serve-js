@@ -1,4 +1,3 @@
-
 var filter = Function.call.bind([].filter)
 var File = require('sourcegraph/file')
 var each = require('foreach/series')
@@ -13,7 +12,7 @@ var when = Result.when
 var read = Result.read
 var join = path.join
 
-module.exports = function(base, opts){
+module.exports = function(base) {
   return function(req, res, next){
     if (req.method != 'GET') return next()
     var url = req.url.split('?')[0]
