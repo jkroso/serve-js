@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": ["development", "server"],
   "author": "Jake Rosoman",
@@ -19,5 +19,6 @@
     "hydro-bdd": "*",
     "hydro": "*",
     "chai": "*"
-  }
+  },
+  "files": ["index.js"]
 }
