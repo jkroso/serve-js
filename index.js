@@ -53,7 +53,7 @@ module.exports = function(base) {
 
         var file = new File(path + '-' + (i + 1) + '.js')
         file.aliases = [ path ]
-        file.javascript = src
+        file.source = src
 
         return when(graph(file), function(files){
           var code = build(files, offset)

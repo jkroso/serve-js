@@ -1,6 +1,6 @@
 {
   "name": "serve-js",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "handy development time middleware for projects written in the spirit of the commonjs module system",
   "keywords": ["development", "server"],
   "author": "Jake Rosoman",
